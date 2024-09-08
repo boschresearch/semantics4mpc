@@ -1,0 +1,64 @@
+PREFIX bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#>
+PREFIX props: <https://w3id.org/props#>
+PREFIX fso: <https://w3id.org/fso#>
+PREFIX fso-ext: <http://bosch-cr-aes//hsbc/fso-extension#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX ssn: <http://www.w3.org/ns/ssn/>
+PREFIX brick: <https://brickschema.org/schema/Brick#>
+PREFIX td: <https://www.w3.org/2019/wot/td#>
+PREFIX ref: <https://brickschema.org/schema/Brick/ref#>
+PREFIX ssn-ext: <http://bosch-cr-aes//hsbc/ssn-extension#>
+SELECT DISTINCT ?radiator ?actuatorID 
+?tempSensorID ?actuatorIot ?tempSensorIot
+?nominalHeatingPowerValue ?nominalSupTempValue 
+?expoCoefficientValue  ?nominalRetTempValue
+WHERE {
+{
+SELECT ?radiator ?actuatorID ?actuatorIot 
+?nominalHeatingPowerValue ?nominalSupTempValue 
+?expoCoefficientValue ?nominalRetTempValue
+WHERE
+{
+    ?space a bot-ext:HVACSpace;
+        props:hasRevitId '1500542' .   
+    ?radiator fso:transfersHeatTo ?space;
+        a fso-ext:Radiator;
+        a sosa:FeatureOfInterest;
+        ssn:hasProperty ?flowProperty;
+        ssn:hasProperty ?tempSetpoint.           
+    ?actuator ssn:forProperty ?flowProperty;
+        a brick:Water_Flow_Sensor;
+        td:name ?actuatorIot;
+        ref:hasTimeseriesID ?actuatorID.
+    ?radiator ssn:hasProperty ?nominalHeatingPower, ?nominalSupTemp, ?nominalRetTemp, ?expoCoefficient.
+    ?nominalHeatingPower a ssn-ext:NominalPower;
+        brick:value ?nominalHeatingPowerValue.
+    ?nominalSupTemp a ssn-ext:NominalSupplyTemperature;
+        brick:value ?nominalSupTempValue .
+    ?nominalRetTemp a ssn-ext:NominalReturnTemperature;
+        brick:value ?nominalRetTempValue .
+    ?expoCoefficient a ssn-ext:ExponentialCoefficient;        
+        brick:value ?expoCoefficientValue.}}
+{
+SELECT  (COUNT(DISTINCT ?step) as ?distance) 
+?tempSensorID ?tempSensorIot
+WHERE
+{    ?space a bot-ext:HVACSpace;
+        props:hasRevitId '1500542' .   
+    ?radiator fso:transfersHeatTo ?space;
+        a fso-ext:Radiator ;
+        a sosa:FeatureOfInterest .
+    ?component fso:feedsFluidTo* ?step;
+        a fso-ext:SensorFitting;
+        a sosa:FeatureOfInterest.
+    ?step fso:feedsFluidTo+ ?radiator.
+    ?sys a fso:SupplySystem;
+        fso:hasComponent ?component, ?step.
+    ?component ssn:hasProperty ?tempProperty.
+    ?tempSensor sosa:observes ?tempProperty;
+        a brick:Temperature_Sensor;
+        td:name ?tempSensorIot;
+        ref:hasTimeseriesID ?tempSensorID.}
+GROUP BY ?tempSensorID ?component ?tempSensorIot
+ORDER BY  ASC(?distance) LIMIT 1 }
+}

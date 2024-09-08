@@ -1,0 +1,40 @@
+PREFIX bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#>
+PREFIX bot: <https://w3id.org/bot#>
+PREFIX props: <https://w3id.org/props#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT  ?element ?eleArea ?AESurface 
+?surBoundary ?surArea ?uValue ?cValue 
+(SUM(?AEOpeningArea) AS ?totalOpeningArea) 
+(GROUP_CONCAT(?AEOpening;separator="\n") AS 
+?beoOpeningList) 
+WHERE
+{
+?Zone a bot-ext:HVACSpace;
+        bot:containsZone+ ?AESpace;
+        props:hasRevitId '1500542'.
+?AESpace a bot-ext:EnergyAnalyticalSpace.
+?AESurface a bot:Interface;
+        props:hasArea ?surAreaWithUnit;
+        props:hasBoundary ?surBoundary;
+        props:hasUvalue ?uValueWithUnit;
+        props:hasCvalue ?cValueWithUnit;
+        bot:interfaceOf ?element;
+        bot:interfaceOf ?AESpace.
+?element   a bot:Element;
+        props:hasArea ?eleAreaWithUnit. 
+OPTIONAL
+{?AEOpening a bot:Interface;
+           props:relatesTo ?AESurface;
+           props:hasHeight ?openingHeightWithUnit;
+           props:hasBoundary ?openingBoundary;
+           props:hasWidth ?openingWidthWithUnit.
+BIND(xsd:float(STRBEFORE(?openingHeightWithUnit, " ")) AS ?openingHeight)
+BIND(xsd:float(STRBEFORE(?openingWidthWithUnit, " ")) AS ?openingWidth)
+BIND(?openingHeight*?openingWidth AS ?AEOpeningArea)}
+
+BIND(xsd:float(STRBEFORE(?surAreaWithUnit, " ")) AS ?surArea)
+BIND(xsd:float(STRBEFORE(?uValueWithUnit, " ")) AS ?uValue)
+BIND(xsd:float(STRBEFORE(?cValueWithUnit, " ")) AS ?cValue)
+BIND(xsd:float(STRBEFORE(?eleAreaWithUnit, " ")) AS ?eleArea)
+}
+GROUP BY ?element ?eleArea ?AESurface ?surBoundary ?surArea ?orienteation ?uValue ?cValue

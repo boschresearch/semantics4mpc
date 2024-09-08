@@ -1,0 +1,186 @@
+// Copyright (c) 2022 Robert Bosch GmbH
+// All rights reserved.
+//
+// This source code is licensed under the CC-BY-SA-4.0 license found in the
+// LICENSE file in the root directory of this source tree.
+
+# baseURI: http://bosch-cr-aes//hsbc/ssn-extension
+# imports: http://www.w3.org/ns/ssn/
+# prefix: ssn-ext
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ssn-ext: <http://bosch-cr-aes//hsbc/ssn-extension#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://bosch-cr-aes//hsbc/ssn-extension>
+  rdf:type owl:Ontology ;
+  owl:imports <http://www.w3.org/ns/ssn/> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+ssn-ext:Adaptivity
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:Adaptivity_False
+  rdf:type ssn-ext:Adaptivity ;
+.
+ssn-ext:Adaptivity_True
+  rdf:type ssn-ext:Adaptivity ;
+.
+ssn-ext:AirTerminalType
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:ControlInterval
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:DesignCoolingDemand
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:DesignHeatingDemand
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:DesignProperty
+  rdf:type owl:Class ;
+  rdfs:subClassOf <http://www.w3.org/ns/ssn/Property> ;
+.
+ssn-ext:DesignReturnAirflowDemand
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:DesignSupplyAirflowDemand
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:Effiency
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:ExponentialCoefficient
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:FlowState
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:FrictionFactor
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:Length
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:MaterialType
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:MaxPower
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:MinPower
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:NominalFlowDirection
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:NominalFlowDirection_In
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:NominalFlowDirection ;
+.
+ssn-ext:NominalFlowDirection_Out
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:NominalFlowDirection ;
+.
+ssn-ext:NominalMassflow
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:NominalPower
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:NominalPressureDrop
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:NominalPressureRise
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:NominalReturnTemperature
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:NominalSupplyTemperature
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:NominalTemperature
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:PredictionHorizon
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:ReynoldsNumber
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:ThermalEnvelope
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:TrainingLength
+  rdf:type owl:Class ;
+  rdfs:subClassOf ssn-ext:DesignProperty ;
+.
+ssn-ext:hasDesignValue
+  rdf:type owl:DatatypeProperty ;
+  rdfs:range xsd:decimal ;
+.
+ssn-ext:hasNominalInletTemperature
+  rdf:type owl:DatatypeProperty ;
+  rdfs:range xsd:decimal ;
+  rdfs:subPropertyOf ssn-ext:hasDesignValue ;
+.
+ssn-ext:hasNominalMassflow
+  rdf:type owl:DatatypeProperty ;
+  rdfs:range xsd:decimal ;
+  rdfs:subPropertyOf ssn-ext:hasDesignValue ;
+.
+ssn-ext:hasNominalOutletTemperature
+  rdf:type owl:DatatypeProperty ;
+  rdfs:range xsd:decimal ;
+  rdfs:subPropertyOf ssn-ext:hasDesignValue ;
+.
+ssn-ext:hasNominalPower
+  rdf:type owl:DatatypeProperty ;
+  rdfs:range xsd:decimal ;
+  rdfs:subPropertyOf ssn-ext:hasDesignValue ;
+.
+ssn-ext:hasNominalPressureDrop
+  rdf:type owl:DatatypeProperty ;
+  rdfs:range xsd:decimal ;
+  rdfs:subPropertyOf ssn-ext:hasDesignValue ;
+.
+ssn-ext:hasNominalPressureRise
+  rdf:type owl:DatatypeProperty ;
+  rdfs:range xsd:decimal ;
+  rdfs:subPropertyOf ssn-ext:hasDesignValue ;
+.
+ssn-ext:hasSimpleEfficiency
+  rdf:type owl:DatatypeProperty ;
+  rdfs:range xsd:decimal ;
+  rdfs:subPropertyOf ssn-ext:hasDesignValue ;
+.

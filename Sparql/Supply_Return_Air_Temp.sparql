@@ -1,0 +1,55 @@
+PREFIX pep: <https://w3id.org/pep/>
+PREFIX bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#>
+PREFIX props: <https://w3id.org/props#>
+PREFIX control: <http://bosch-cr-aes//hsbc/control-extension#>
+PREFIX seas: <https://w3id.org/seas/>
+PREFIX brick: <https://brickschema.org/schema/Brick#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX ref: <https://brickschema.org/schema/Brick/ref#>
+PREFIX fso: <https://w3id.org/fso#>
+PREFIX fso-ext: <http://bosch-cr-aes//hsbc/fso-extension#>
+PREFIX ssn: <http://www.w3.org/ns/ssn/>
+INSERT
+{ ?controller pep:hasInput ?supTemp, ?retTemp. }
+WHERE
+{
+?space a bot-ext:HVACSpace ;
+    	   props:hasRevitId '1500542'. 
+?controller a control:ModelPredictiveController;
+             seas:optimizes ?space.
+{SELECT ?space ?supTemp
+(COUNT(DISTINCT ?stepSup) as ?distanceSup)
+WHERE
+{	?space a bot-ext:HVACSpace ;
+        props:hasRevitId '1500542'.
+    ?supTempSensor a brick:Temperature_Sensor ;
+        sosa:observes ?supTemp ;
+        ref:hasTimeseriesID ?supTempSensorId .
+    ?system a fso:SupplySystem;
+        fso:hasComponent ?ductSup . 
+    ?ductSup fso:feedsFluidTo*  ?stepSup;
+        a fso-ext:Duct;
+        a sosa:FeatureOfInterest;
+        ssn:hasProperty ?supTemp.
+    ?stepSup fso:feedsFluidTo+ ?space.}
+GROUP BY ?supTempSensorId ?retTempSensorId ?space ?supTemp
+ORDER BY  ASC(?distanceSup) 
+LIMIT 1}
+{SELECT ?space  ?retTemp
+(COUNT(DISTINCT ?stepRet) as ?distanceRet)
+WHERE
+{	?space a bot-ext:HVACSpace;
+        props:hasRevitId '1500542' .
+    ?retTempSensor a brick:Temperature_Sensor;
+        sosa:observes ?retTemp ;
+        ref:hasTimeseriesID ?retTempSensorId.
+    ?systemRet a fso:ReturnSystem;
+               fso:hasComponent ?ductRet. 
+    ?space fso:feedsFluidTo*  ?stepRet.
+    ?stepRet fso:feedsFluidTo+ ?ductRet.
+    ?ductRet a fso-ext:Duct;
+    		 a sosa:FeatureOfInterest;
+             ssn:hasProperty ?retTemp.}
+GROUP BY ?retTempSensorId ?ductRet ?space ?retTemp 
+ORDER BY ASC(?distanceRet) 
+LIMIT 1}}

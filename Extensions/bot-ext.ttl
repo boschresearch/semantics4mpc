@@ -1,0 +1,45 @@
+// Copyright (c) 2022 Robert Bosch GmbH
+// All rights reserved.
+//
+// This source code is licensed under the CC-BY-SA-4.0 license found in the
+// LICENSE file in the root directory of this source tree.
+
+# baseURI: http://bosch-cr-aes//hsbc/bot-extension
+# imports: http://www.w3.org/2003/01/geo/wgs84_pos
+# imports: https://pi.pauwel.be/voc/buildingelement
+# imports: https://w3id.org/bot#
+# prefix: bot-ext
+
+@prefix bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://bosch-cr-aes//hsbc/bot-extension>
+  rdf:type owl:Ontology ;
+  owl:imports <http://www.w3.org/2003/01/geo/wgs84_pos> ;
+  owl:imports <https://pi.pauwel.be/voc/buildingelement> ;
+  owl:imports <https://w3id.org/bot#> ;
+  owl:versionInfo "0.1" ;
+.
+bot-ext:EnergyAnalyticalSpace
+  rdf:type owl:Class ;
+  rdfs:comment "The EnergyAnalyticalSpace stands for a  virtual space created for heat transfer analysis" ;
+  rdfs:subClassOf <https://w3id.org/bot#Space> ;
+.
+bot-ext:HVACSpace
+  rdf:type owl:Class ;
+  rdfs:comment "The HVACSpace stands for a virtual space created for Heating, Ventilation and Air-Conditioning (HVAC) related calculations" ;
+  rdfs:subClassOf <https://w3id.org/bot#Space> ;
+.
+bot-ext:Room
+  rdf:type owl:Class ;
+  rdfs:comment "The Room represents a room in a building, which is designed by the architects." ;
+  rdfs:subClassOf <https://w3id.org/bot#Space> ;
+.
+bot-ext:inverseOf
+  rdf:type owl:ObjectProperty ;
+  rdfs:comment "The relationship between two bot interfaces which are hosted on the two sides of the  same building element, share  the same shape but have exact opposite normals." ;
+  rdfs:label "inverse of" ;
+.

@@ -1,0 +1,98 @@
+// Copyright (c) 2022 Robert Bosch GmbH
+// All rights reserved.
+//
+// This source code is licensed under the CC-BY-SA-4.0 license found in the
+// LICENSE file in the root directory of this source tree.
+
+# baseURI: http://bosch-cr-aes//hsbc/control-extension
+# imports: https://w3id.org/pep/
+# imports: https://w3id.org/seas/ForecastingOntology
+# imports: https://w3id.org/seas/OptimizationOntology
+# imports: https://www.w3.org/2019/wot/hypermedia#
+# prefix: control
+
+@prefix control: <http://bosch-cr-aes//hsbc/control-extension#> .
+@prefix hctl: <https://www.w3.org/2019/wot/hypermedia#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix ssn-ext: <http://bosch-cr-aes//hsbc/ssn-extension#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://bosch-cr-aes//hsbc/control-extension>
+  rdf:type owl:Ontology ;
+  owl:imports <https://w3id.org/pep/> ;
+  owl:imports <https://w3id.org/seas/ForecastingOntology> ;
+  owl:imports <https://w3id.org/seas/OptimizationOntology> ;
+  owl:imports hctl: ;
+  owl:versionInfo "Extension ontologies to the SEAS ontology. specifc for the Model Predictive Control (MPC) algorithm." ;
+.
+control:Ambience_Pred
+  rdf:type owl:Class ;
+  rdfs:comment "The class Ambience_Pred stands for the the exterior ambience forecasting algorithm." ;
+  rdfs:label "Exterior ambient disturbance prediction" ;
+  rdfs:subClassOf control:Forecast ;
+  hctl:hasTarget "https://bosch-cr-aes/hsbc/control-extension/forecasts/ambience" ;
+.
+control:Comfort_Optimization
+  rdf:type owl:Class ;
+  rdfs:comment "A class of the MPC algorithm with an optimization objective function targetting at optimizing the room comfort." ;
+  rdfs:subClassOf control:OptimalControlProblem ;
+  hctl:hasTarget "https://bosch-cr-aes/hsbc/control-extension/OCP/room_comfort_optimization" ;
+.
+control:Energy_Conservation_Optimization
+  rdf:type owl:Class ;
+  rdfs:comment "A class of an MPC algorithm with an optimization objective function targetting at minimizing the HVAC energy usage for the room." ;
+  rdfs:subClassOf control:OptimalControlProblem ;
+  hctl:hasTarget "https://bosch-cr-aes/hsbc/control-extension/OCP/room_energy_conservation" ;
+.
+control:Forecast
+  rdf:type owl:Class ;
+  rdfs:label "A collection for the forecast services of the disturbances required in the MPC algorithms." ;
+  rdfs:subClassOf <https://w3id.org/seas/Forecasting> ;
+.
+control:Hankel_Matrix_Dynamic
+  rdf:type owl:Class ;
+  rdfs:comment "The class Hankel_Matrix_Dynamic represents the System Identification algorithm that deploys Hankel Matrix method to quantify the system dynamic of the building envelope." ;
+  rdfs:subClassOf control:SystemIdentification ;
+  hctl:hasTarget "https://bosch-cr-aes/hsbc/control-extension/SI/hankel_dynamic" ;
+.
+control:ModelPredictiveController
+  rdf:type owl:Class ;
+  rdfs:comment "A class for the controller that executes  the specific Model Predictive Control (MPC) algorithm." ;
+  rdfs:label "Model Predictive Controller" ;
+  rdfs:subClassOf <https://w3id.org/pep/ProcedureExecutor> ;
+  rdfs:subClassOf <https://w3id.org/seas/OptimizationExecutor> ;
+.
+control:Occupancy_Pred
+  rdf:type owl:Class ;
+  rdfs:comment "The class Occupancy_Pred  represents the occupant number forecasting algorithm (disturbance from the occupants)." ;
+  rdfs:label "Number of occupants forecast" ;
+  rdfs:subClassOf control:Forecast ;
+  hctl:hasTarget "https://bosch-cr-aes/hsbc/control-extension/forecasts/occupants" ;
+.
+control:OptimalControlProblem
+  rdf:type owl:Class ;
+  rdfs:comment "A class of the Optimal Control Problem (OCP) involved in the Model Predictive Control (MPC) algorithm." ;
+  rdfs:subClassOf <https://w3id.org/pep/Procedure> ;
+  rdfs:subClassOf <https://w3id.org/seas/OptimizationProcedure> ;
+.
+control:RC_Dynamic
+  rdf:type owl:Class ;
+  rdfs:comment "The class RC_Dynamic represents the System Identification algorithm that deploys Resistance and Capacitance (RC) model to quantify the system dynamic of the building envelope." ;
+  rdfs:subClassOf control:SystemIdentification ;
+  hctl:hasTarget "https://bosch-cr-aes/hsbc/control-extension/SI/rc_dynamic" ;
+.
+control:Suppy_Air_Temperature_Pred
+  rdf:type owl:Class ;
+  rdfs:comment "Class Supply_Air_Temperature_Pred represents the prediction algorithm for the supply air temperature from the central AHU and before entering the reheating coil  in the room." ;
+  rdfs:label "Prediction of the supply air temperature before the reheating coil." ;
+  rdfs:subClassOf control:Forecast ;
+  hctl:hasTarget "https://bosch-cr-aes/hsbc/control-extension/forecasts/air_temperature" ;
+.
+control:SystemIdentification
+  rdf:type owl:Class ;
+  rdfs:comment "The class SystemIdentification represent the collection of system idenfitication algorithms involved in the Model Predictive Control (MPC) algorithm." ;
+  rdfs:subClassOf <https://w3id.org/pep/Procedure> ;
+.

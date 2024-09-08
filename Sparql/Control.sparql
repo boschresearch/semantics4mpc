@@ -1,0 +1,27 @@
+PREFIX bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#>
+PREFIX props: <https://w3id.org/props#>
+PREFIX bot: <https://w3id.org/bot#>
+PREFIX control: <http://bosch-cr-aes//hsbc/control-extension#>
+PREFIX seas: <https://w3id.org/seas/>
+PREFIX pep: <https://w3id.org/pep/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX hctl: <https://www.w3.org/2019/wot/hypermedia#>
+SELECT DISTINCT ?space ?controller 
+?ocpURL ?siURL (GROUP_CONCAT(DISTINCT ?forecastURL; separator="\n") as ?forecastsURL) 
+where 
+{   ?space a bot-ext:HVACSpace ;
+    	props:hasRevitId '1500542';
+        bot:containsZone ?room.      
+    ?controller a control:ModelPredictiveController;
+        seas:optimizes ?space;
+    pep:implements ?si, ?forecasts, ?ocp.
+    ?si a ?siClass.
+    ?siClass rdfs:subClassOf control:SystemIdentification;
+        hctl:hasTarget ?siURL.
+    ?forecast a ?forecastClass.
+    ?forecastClass rdfs:subClassOf seas:Forecasting;
+        hctl:hasTarget ?forecastURL.
+    ?ocp a ?ocpClass.
+    ?ocpClass rdfs:subClassOf control:OptimalControlProblem;
+        hctl:hasTarget ?ocpURL. }
+GROUP BY ?space ?controller ?optimization ?si ?ocpURL ?siURL

@@ -1,0 +1,95 @@
+// Copyright (c) 2022 Robert Bosch GmbH
+// All rights reserved.
+//
+// This source code is licensed under the CC-BY-SA-4.0 license found in the
+// LICENSE file in the root directory of this source tree.
+
+# baseURI: http://bosch-cr-aes//hsbc//fso-deo-alignment
+# imports: http://bosch-cr-aes//hsbc/fso-extension
+# imports: https://pi.pauwel.be/voc/distributionelement
+
+@prefix fso-ext: <http://bosch-cr-aes//hsbc/fso-extension#> .
+@prefix mep: <https://pi.pauwel.be/voc/distributionelement#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://bosch-cr-aes//hsbc//fso-deo-alignment>
+  rdf:type owl:Ontology ;
+  owl:imports <http://bosch-cr-aes//hsbc/fso-extension> ;
+  owl:imports <https://pi.pauwel.be/voc/distributionelement> ;
+.
+fso-ext:AHU
+  owl:equivalentClass mep:UnitaryEquipment-AIRHANDLER ;
+.
+fso-ext:AirTerminal
+  owl:equivalentClass mep:AirTerminal ;
+.
+fso-ext:Boiler
+  owl:equivalentClass mep:Boiler ;
+.
+fso-ext:Cap
+  rdfs:subClassOf mep:DuctFitting ;
+  rdfs:subClassOf mep:PipeFitting ;
+.
+fso-ext:Damper
+  owl:equivalentClass mep:Damper ;
+.
+fso-ext:DistributionElement
+  owl:equivalentClass mep:DistributionControlElement ;
+.
+fso-ext:Duct
+  owl:equivalentClass mep:DuctSegment ;
+.
+fso-ext:DuctSilencer
+  owl:equivalentClass mep:DuctSilencer ;
+.
+fso-ext:Elbow
+  rdfs:subClassOf mep:DuctFitting ;
+  rdfs:subClassOf mep:PipeFitting ;
+.
+fso-ext:Fan
+  owl:equivalentClass mep:Fan ;
+.
+fso-ext:FireDamper
+  owl:equivalentClass mep:Damper-FIREDAMPER ;
+.
+fso-ext:FlexDuct
+  owl:equivalentClass mep:DuctSegment-FLEXIBLESEGMENT ;
+.
+fso-ext:Flowmeter
+  owl:equivalentClass mep:FlowMeter ;
+.
+fso-ext:HeatExchanger
+  owl:equivalentClass mep:HeatExchanger ;
+.
+fso-ext:Pants
+  rdfs:subClassOf mep:DuctFitting ;
+.
+fso-ext:Pipe
+  owl:equivalentClass mep:PipeSegment ;
+.
+fso-ext:Pump
+  owl:equivalentClass mep:Pump ;
+.
+fso-ext:Radiator
+  owl:equivalentClass mep:SpaceHeater ;
+.
+fso-ext:SensorFitting
+  owl:equivalentClass mep:FlowInstrument ;
+.
+fso-ext:Tap
+  rdfs:subClassOf mep:DuctFitting ;
+.
+fso-ext:Tee
+  rdfs:subClassOf mep:DuctFitting ;
+  rdfs:subClassOf mep:PipeFitting ;
+.
+fso-ext:Transition
+  rdfs:subClassOf mep:DuctFitting ;
+  rdfs:subClassOf mep:PipeFitting ;
+.
+fso-ext:Valve
+  owl:equivalentClass mep:Valve ;
+.

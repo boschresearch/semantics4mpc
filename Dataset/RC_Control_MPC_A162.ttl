@@ -1,0 +1,45 @@
+@prefix bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#> .
+@prefix props: <https://w3id.org/props#> .
+@prefix inst: <https://example.com/inst#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ssn-ext: <http://bosch-cr-aes//hsbc/ssn-extension#> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix control: <http://bosch-cr-aes//hsbc/control-extension#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix pep: <https://w3id.org/pep/> .
+@prefix seas: <https://w3id.org/seas/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf4j: <http://rdf4j.org/schema/rdf4j#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+
+inst:ControlPredictionHorizon_A162 a ssn-ext:PredictionHorizon;
+  brick:hasUnit <http://qudt.org/vocab/unit/HR>;
+  brick:value 3.0E0 .
+
+inst:MPC_Controller_A162 a control:ModelPredictiveController;
+  ssn:hasProperty ssn-ext:Adaptivity_True, inst:ControlPredictionHorizon_A162, inst:SamplingInterval_A162,
+    inst:TraininSamplingInterval_A162g_Length_A162;
+  pep:implements inst:Ambience_Pred_A162, inst:Energy_Conservation_Optimization_A162,
+    inst:Occupancy_Pred_A162, inst:RC_Dynamic_A162, inst:Temperature_Ref_A162;
+  seas:optimizes inst:Space_ceca580e-2628-440f-b023-e942adfb29fe-0016e57e .
+
+inst:SamplingInterval_A162 a ssn-ext:ControlInterval;
+  brick:hasUnit <http://qudt.org/vocab/unit/MIN>;
+  brick:value 5.0E0 .
+
+inst:Training_Length_A162 a ssn-ext:TrainingLength;
+  brick:hasUnit <http://qudt.org/vocab/unit/DAY>;
+  brick:value 2.1E1 .
+
+inst:Ambience_Pred_A162 a control:Ambience_Pred .
+
+inst:Energy_Conservation_Optimization_A162 a control:Energy_Conservation_Optimization .
+
+inst:Occupancy_Pred_A162 a control:Occupancy_Pred .
+
+inst:RC_Dynamic_A162 a control:RC_Dynamic .
+
+inst:Temperature_Ref_A162 a control:Temperature_Ref .

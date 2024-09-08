@@ -1,0 +1,49 @@
+PREFIX bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#>
+PREFIX props: <https://w3id.org/props#>
+PREFIX fso-ext: <http://bosch-cr-aes//hsbc/fso-extension#>
+PREFIX fso: <https://w3id.org/fso#>
+PREFIX ssn: <http://www.w3.org/ns/ssn/>
+PREFIX ssn-ext: <http://bosch-cr-aes//hsbc/ssn-extension#>
+PREFIX brick: <https://brickschema.org/schema/Brick#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX ref: <https://brickschema.org/schema/Brick/ref#>
+SELECT DISTINCT ?space ?valvePositionId ?diameter ?unit ?valvePositionIdRet ?diameterRet 
+?unitRet
+WHERE {
+    ?space a bot-ext:HVACSpace ;
+    	props:hasRevitId '1500542' .
+    
+    ?airTerminalRet a fso-ext:AirTerminal .
+    ?airTerminal a fso-ext:AirTerminal .
+    ?damperRet a fso-ext:Damper.
+    ?damper a fso-ext:Damper.
+    ?damper fso:feedsFluidTo* ?airTerminal. 
+    ?airTerminal fso:feedsFluidTo ?space.
+    ?space fso:feedsFluidTo ?airTerminalRet.
+    ?airTerminalRet fso:feedsFluidTo* ?damperRet.  
+    
+    ?supplySystem a fso:SupplySystem ;
+   		fso:hasComponent ?damper,?airTerminal.
+    ?damper ssn:forProperty ?property ;
+        ssn:hasProperty ?hydraulicDiameter .
+    ?hydraulicDiameter a ssn-ext:HydraulicDiameter ;
+        brick:value ?diameter;
+        brick:hasUnit ?unit.
+    ?valveActuator a sosa:Actuator;
+        sosa:observes ?property;
+        ref:hasTimeseriesID ?valvePositionId.
+    
+    ?returnSystem a fso:ReturnSystem;                     
+        fso:hasComponent ?damperRet.  
+	?damperRet ssn:forProperty ?propertyRet;
+        ssn:hasProperty ?hydraulicDiameterRet.
+    ?hydraulicDiameterRet a ssn-ext:HydraulicDiameter;
+    	brick:value ?diameterRet;
+    	brick:hasUnit ?unitRet. 
+    ?valveActuatorRet a sosa:Actuator;
+        sosa:observes ?propertyRet;
+        ref:hasTimeseriesID ?valvePositionIdRet.
+} 
+GROUP BY ?damper ?property ?valveActuator ?valvePositionId ?space ?diameter ?unit ?damperRet 
+?propertyRet ?valveActuatorRet ?valvePositionIdRet ?diameterRet ?unitRet
+

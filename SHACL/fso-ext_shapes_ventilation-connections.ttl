@@ -1,0 +1,367 @@
+// Copyright (c) 2022 Robert Bosch GmbH
+// All rights reserved.
+//
+// This source code is licensed under the CC-BY-SA-4.0 license found in the
+// LICENSE file in the root directory of this source tree.
+
+# baseURI: http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections
+# imports: http://bosch-cr-aes//hsbc/fso-ext_shapes_heating-connections
+# imports: http://bosch-cr-aes//hsbc/fso-extension
+# imports: http://bosch-cr-aes//hsbc/ssn-extension
+# imports: http://datashapes.org/dash
+# imports: http://www.w3.org/ns/ssn/
+# imports: https://w3id.org/bot#
+# prefix: fso-ext_shapes_ventilation-connections
+
+@prefix bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#> .
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix fso: <https://w3id.org/fso#> .
+@prefix fso-ext: <http://bosch-cr-aes//hsbc/fso-extension#> .
+@prefix fso-ext_shapes_ventilation-connections: <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tso: <https://w3id.org/tso#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections>
+  rdf:type owl:Ontology ;
+  owl:imports <http://bosch-cr-aes//hsbc/fso-ext_shapes_heating-connections> ;
+  owl:imports <http://bosch-cr-aes//hsbc/fso-extension> ;
+  owl:imports <http://bosch-cr-aes//hsbc/ssn-extension> ;
+  owl:imports <http://datashapes.org/dash> ;
+  owl:imports <http://www.w3.org/ns/ssn/> ;
+  owl:imports <https://w3id.org/bot#> ;
+  owl:versionInfo "AES2 V01" ;
+.
+fso-ext:AirTerminal
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error 0 spaces feed fluid to Return AirTerminal" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """
+PREFIX fso:<https://w3id.org/fso#>
+PREFIX bot:<https://w3id.org/bot#>
+PREFIX bot-ext:<http://bosch-cr-aes//hsbc/bot-extension#>
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fso-ext: <http://bosch-cr-aes//hsbc/fso-extension#>
+
+SELECT $this (COUNT(?space) AS ?spaces)
+WHERE {
+?system a fso:ReturnSystem .
+	?system fso:hasComponent $this .
+	
+	OPTIONAL {
+		#?spaceType rdfs:subClassOf* bot:Space .
+		#?space a ?spaceType .
+		?space fso:feedsFluidTo $this .
+}
+
+} 
+GROUP BY $this
+HAVING (COUNT(?space) != 1)
+
+""" ;
+    ] ;
+  sh:sparql [
+      sh:message "Error Return AirTerminal feeds fluid to {?components} components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+PREFIX bot-ext:<http://bosch-cr-aes//hsbc/bot-extension#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+
+	?system a fso:ReturnSystem .
+	?system fso:hasComponent $this .
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)""" ;
+    ] ;
+  sh:sparql [
+      sh:message "Error Supply AirTerminal feed fluid to {?components} spaces" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+
+	?system a fso:SupplySystem .
+	?system fso:hasComponent $this .
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)""" ;
+    ] ;
+  sh:targetClass fso-ext:AirTerminal ;
+.
+fso-ext:Cap
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Return Cap Fitting feeds fluid to {?components} other components instead of 1" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	?system a fso:ReturnSystem .
+	?system fso:hasComponent $this.
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)""" ;
+    ] ;
+  sh:sparql [
+      sh:message "Error Supply Cap Fitting feeds fluid to {?components} other components instead of 2" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	?system a fso:SupplySystem .
+	?system fso:hasComponent $this.
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (?components != 0)""" ;
+    ] ;
+  sh:targetClass fso-ext:Cap ;
+.
+fso-ext:Damper
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Damper feeds fluid to {?components} other components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)""" ;
+    ] ;
+  sh:targetClass fso-ext:Damper ;
+.
+fso-ext:Duct
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Duct feedFluidTo {?components} components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """
+	  PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) < 1)""" ;
+    ] ;
+  sh:targetClass fso-ext:Duct ;
+.
+fso-ext:Elbow
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Elbow feeds fluid to {?components} other components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)
+""" ;
+    ] ;
+  sh:targetClass fso-ext:Elbow ;
+.
+fso-ext:Fan
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      rdf:type sh:SPARQLConstraint ;
+      sh:message "Error Fan feeds fluid to {components} other components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) < 1)""" ;
+    ] ;
+  sh:targetClass fso-ext:Fan ;
+.
+fso-ext:FireDamper
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error FireDamper feeds fluid to {?components} other components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)""" ;
+    ] ;
+  sh:targetClass fso-ext:FireDamper ;
+.
+fso-ext:FlexDuct
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error FlexDuct feeds fluid to {?components} components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) < 1)""" ;
+    ] ;
+  sh:targetClass fso-ext:FlexDuct ;
+.
+fso-ext:Pants
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Pants feeds fluid to {?components} other components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) < 1)
+""" ;
+    ] ;
+  sh:targetClass fso-ext:Pants ;
+.
+fso-ext:SensorFitting
+  rdf:type sh:NodeShape ;
+  sh:property [
+      rdf:type sh:PropertyShape ;
+      sh:path fso:feedsFluidTo ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+      sh:name "feeds fluid to" ;
+    ] ;
+.
+fso-ext:Tap
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Tap feeds fluid to {?components} other components" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)
+""" ;
+    ] ;
+  sh:targetClass fso-ext:Tap ;
+.
+fso-ext:Tee
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Return Tee Fitting feeds fluid to {?components} other components instead of 1" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	?system a fso:ReturnSystem .
+	?system fso:hasComponent $this.
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)""" ;
+    ] ;
+  sh:sparql [
+      sh:message "Error Supply Tee Fitting feeds fluid to {?components} other components instead of 2" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	?system a fso:SupplySystem .
+	?system fso:hasComponent $this.
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (?components != 2)""" ;
+    ] ;
+  sh:targetClass fso-ext:Tee ;
+.
+fso-ext:Transition
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Transition feeds fluid to {?components} other components instead of 1" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this (COUNT(?component) AS ?components)
+WHERE {
+	OPTIONAL { $this fso:feedsFluidTo ?component .}
+
+
+} 
+GROUP BY $this 
+HAVING (COUNT(?component) != 1)""" ;
+    ] ;
+  sh:targetClass fso-ext:Transition ;
+.
+fso:Component
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message """Component not assigned to a Subcomponent
+IfcExportAs Parameter missing or not defined""" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+
+SELECT $this 
+WHERE {
+	$this a fso:Component .
+}
+
+""" ;
+    ] ;
+  sh:targetClass fso:Component ;
+.
+fso:Fitting
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Fitting not defined" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/fso-ext_shapes_ventilation-connections> ;
+      sh:select """PREFIX fso:<https://w3id.org/fso#>
+SELECT $this
+WHERE {
+	$this a fso:Fitting .
+
+
+} 
+
+""" ;
+    ] ;
+  sh:targetClass fso:Fitting ;
+.

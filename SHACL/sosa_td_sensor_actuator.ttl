@@ -1,0 +1,54 @@
+@PREFIX sosa: <http://www.w3.org/ns/sosa/>
+@PREFIX brick: <https://brickschema.org/schema/Brick#>
+@PREFIX ref: <https://brickschema.org/schema/Brick/ref#>
+@PREFIX td: <https://www.w3.org/2019/wot/td#>
+
+sosa:Actuator
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Actuator has ID issue!" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/sosa_td_sensor_actuator> ;
+      sh:select """
+				PREFIX sosa: <http://www.w3.org/ns/sosa/>
+				PREFIX brick: <https://brickschema.org/schema/Brick#>
+				PREFIX ref: <https://brickschema.org/schema/Brick/ref#>
+				PREFIX td: <https://www.w3.org/2019/wot/td#>
+				select $this
+				where { 
+					$this a sosa:Actuator;
+							  a td:Thing;
+						   ref:hasTimeseriesID ?timeseries_ID;
+						   td:name ?iot_ID.
+				} 
+				GROUP BY $this
+				HAVING (COUNT(?timeseries_ID) != 1 || COUNT(?iot_ID) = !1)
+				""" ;
+    ] ;
+  sh:targetClass sosa:Actuator ;
+.
+
+
+
+sosa:Sensor
+  rdf:type sh:NodeShape ;
+  sh:sparql [
+      sh:message "Error Sensor has ID issue!" ;
+      sh:prefixes <http://bosch-cr-aes//hsbc/sosa_td_sensor_actuator> ;
+      sh:select """
+		PREFIX sosa: <http://www.w3.org/ns/sosa/>
+		PREFIX brick: <https://brickschema.org/schema/Brick#>
+		PREFIX ref: <https://brickschema.org/schema/Brick/ref#>
+		PREFIX td: <https://www.w3.org/2019/wot/td#>
+		select $this
+		where { 
+			$this a sosa:Sensor;
+				  a td:Thing;
+				ref:hasTimeseriesID ?timeseries_ID;
+				td:name ?iot_ID.
+		} 
+		GROUP BY $this
+		HAVING (COUNT(?timeseries_ID) != 1 || COUNT(?iot_ID) = !1)
+				""" ;
+    ] ;
+  sh:targetClass sosa:Actuator ;
+.

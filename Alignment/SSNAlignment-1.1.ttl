@@ -1,0 +1,109 @@
+// Copyright (c) 2022 Robert Bosch GmbH
+// All rights reserved.
+//
+// This source code is licensed under the CC-BY-SA-4.0 license found in the
+// LICENSE file in the root directory of this source tree.
+
+# baseURI: https://w3id.org/pep/SSNAlignment
+# imports: http://www.w3.org/ns/sosa/
+# imports: https://w3id.org/pep/
+
+@prefix : <https://w3id.org/pep/SSNAlignment#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pep: <https://w3id.org/pep/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix voaf: <http://purl.org/vocommons/voaf#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sosa:Actuation
+  rdfs:subClassOf pep:ProcedureExecution ;
+.
+sosa:Actuator
+  rdfs:subClassOf pep:ProcedureExecutor ;
+.
+sosa:Observation
+  rdfs:subClassOf pep:ProcedureExecution ;
+.
+sosa:Sampler
+  rdfs:subClassOf pep:ProcedureExecutor ;
+.
+sosa:Sampling
+  rdfs:subClassOf pep:ProcedureExecution ;
+.
+sosa:Sensor
+  rdfs:subClassOf pep:ProcedureExecutor ;
+.
+pep:Procedure
+  rdfs:subClassOf <https://www.w3.org/ns/sosa/Procedure> ;
+.
+pep:SSNAlignment
+  rdf:type voaf:Vocabulary ;
+  rdf:type owl:Ontology ;
+  rdf:type foaf:Document ;
+  dcterms:issued "2016-08-26"^^xsd:date ;
+  dcterms:modified "2016-09-22"^^xsd:date ;
+  owl:imports sosa: ;
+  owl:imports pep: ;
+  owl:priorVersion <https://w3id.org/pep/SSNAlignment-0.9> ;
+  owl:versionIRI <https://w3id.org/pep/SSNAlignment-1.1> ;
+  owl:versionInfo "v1.1" ;
+.
+pep:hasInput
+  rdfs:subPropertyOf <https://www.w3.org/ns/ssn/hasInput> ;
+.
+pep:hasOutput
+  rdfs:subPropertyOf <https://www.w3.org/ns/ssn/hasOutput> ;
+.
+pep:hasResult
+  rdfs:subPropertyOf <https://www.w3.org/ns/sosa/hasResult> ;
+.
+pep:hasSimpleResult
+  rdfs:subPropertyOf <https://www.w3.org/ns/sosa/hasSimpleResult> ;
+.
+<https://www.w3.org/ns/sosa/implements>
+  rdfs:subPropertyOf pep:implements ;
+.
+<https://www.w3.org/ns/sosa/madeActuation>
+  rdfs:subPropertyOf pep:made ;
+.
+<https://www.w3.org/ns/sosa/madeByActuator>
+  rdfs:subPropertyOf pep:madeBy ;
+.
+<https://www.w3.org/ns/sosa/madeBySampler>
+  rdfs:subPropertyOf pep:madeBy ;
+.
+<https://www.w3.org/ns/sosa/madeBySensor>
+  rdfs:subPropertyOf pep:madeBy ;
+.
+<https://www.w3.org/ns/sosa/madeObservation>
+  rdfs:subPropertyOf pep:made ;
+.
+<https://www.w3.org/ns/sosa/madeSampling>
+  rdfs:subPropertyOf pep:made ;
+.
+<https://www.w3.org/ns/sosa/usedProcedure>
+  rdfs:subPropertyOf pep:usedProcedure ;
+.
+<https://www.w3.org/ns/ssn/Input>
+  owl:equivalentClass [
+      owl:onProperty [
+          owl:inverseOf <https://www.w3.org/ns/ssn/hasInput> ;
+        ] ;
+      owl:someValuesFrom owl:Thing ;
+    ] ;
+.
+<https://www.w3.org/ns/ssn/Output>
+  owl:equivalentClass [
+      owl:onProperty [
+          owl:inverseOf <https://www.w3.org/ns/ssn/hasOutput> ;
+        ] ;
+      owl:someValuesFrom owl:Thing ;
+    ] ;
+.

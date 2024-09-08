@@ -1,0 +1,66 @@
+PREFIX bot-ext: <http://bosch-cr-aes//hsbc/bot-extension#>
+PREFIX props: <https://w3id.org/props#>
+PREFIX fso: <https://w3id.org/fso#>
+PREFIX fso-ext: <http://bosch-cr-aes//hsbc/fso-extension#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX ssn: <http://www.w3.org/ns/ssn/>
+PREFIX brick: <https://brickschema.org/schema/Brick#>
+PREFIX ref: <https://brickschema.org/schema/Brick/ref#>
+SELECT ?reheatCoil ?waterValveId  ?airTempSensorID ?watTempSensorID 
+WHERE
+{	
+{SELECT DISTINCT ?reheatCoil ?waterValveId
+WHERE {
+    ?space a bot-ext:HVACSpace;
+         props:hasRevitId '1500542'.
+    ?reheatCoil fso:feedsFluidTo* ?space;
+        a fso-ext:HeatExchanger;
+        a sosa:FeatureOfInterest . 
+    ?reheatCoil ssn:forProperty ?flowProperty.
+    ?waterValve a brick:Water_Flow_Sensor;
+       sosa:observes ?flowProperty;
+       ref:hasTimeseriesID ?waterValveId. }
+}
+{SELECT  (COUNT(DISTINCT ?step) as ?distance) 
+?airTempSensorID 
+WHERE
+{
+?space a bot-ext:HVACSpace;
+    props:hasRevitId '1500542' .   
+?reheatCoil fso:feedsFluidTo* ?space;
+    a fso-ext:HeatExchanger;
+    a sosa:FeatureOfInterest . 
+?component fso:feedsFluidTo* ?step;
+    a fso-ext:Duct;
+    a sosa:FeatureOfInterest .
+?step fso:feedsFluidTo+ ?reheatCoil.
+?sys a fso:SupplySystem;
+     fso:hasComponent ?component, ?step.
+?component ssn:hasProperty ?tempProperty .
+?tempSensor sosa:observes ?tempProperty;
+    a brick:Temperature_Sensor;
+    ref:hasTimeseriesID ?airTempSensorID.}
+GROUP BY ?airTempSensorID ?component
+ORDER BY  ASC(?distance) LIMIT 1
+}
+{SELECT (COUNT(DISTINCT ?stepW) as ?distanceW)  
+?watTempSensorID 
+WHERE
+{
+?space a bot-ext:HVACSpace;
+   props:hasRevitId '1500542' .   
+?reheatCoil fso:feedsFluidTo* ?space;
+    a fso-ext:HeatExchanger;
+    a sosa:FeatureOfInterest. 
+?pipe fso:feedsFluidTo* ?stepW;
+    a fso-ext:Pipe.   
+?stepW fso:feedsFluidTo+ ?reheatCoil.
+?sys a fso:SupplySystem;
+    fso:hasComponent ?pipe,?reheatCoil.
+?pipe ssn:hasProperty ?tempProperty .
+?tempSensor sosa:observes ?tempProperty;
+    a brick:Temperature_Sensor;
+    ref:hasTimeseriesID ?watTempSensorID .}
+GROUP BY ?watTempSensorID  ?pipe
+ORDER BY  ASC(?distanceW) LIMIT 1}  
+}
